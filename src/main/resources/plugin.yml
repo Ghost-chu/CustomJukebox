@@ -1,0 +1,19 @@
+name: CustomJukeBox
+version: ${project.version}
+main: us.blockbox.customjukebox.customjukebox.CustomJukebox
+api-version: 1.13
+softdepend: [PlotSquared, Multiverse-Core]
+commands:
+  disc:
+    description: View available discs and spawn discs.
+    usage: /<command> <discname>
+  cjbdebug:
+    description: Enable debugging messages.
+    usage: /<command>
+permissions:
+  customjukebox.command.disc:
+    description: View available discs and spawn discs.
+    default: op
+  customjukebox.command.debug:
+    description: Enable debugging messages.
+    default: op
