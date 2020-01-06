@@ -1,10 +1,10 @@
 package us.blockbox.customjukebox.customjukebox;
 
-import com.google.common.collect.*;
-import org.bukkit.block.*;
-import org.bukkit.inventory.*;
-import org.bukkit.entity.*;
-import org.bukkit.*;
+import com.google.common.collect.BiMap;
+import org.bukkit.Location;
+import org.bukkit.SoundCategory;
+import org.bukkit.block.Jukebox;
+import org.bukkit.inventory.ItemStack;
 
 public interface CustomJukeboxAPI
 {
@@ -17,13 +17,8 @@ public interface CustomJukeboxAPI
     boolean isCustomDisc(final ItemStack p0);
     
     ItemStack discCreate(final String p0);
-    
-    void playDisc(final Player p0, final Location p1, final String p2, final float p3, final float p4);
-    
-    void playDisc(final Player p0, final Location p1, final String p2, final SoundCategory p3, final float p4, final float p5);
-    
-    void playDisc(final Location p0, final String p1, final float p2, final float p3);
-    
+    void discInsert(final Location p0, final ItemStack p1);
+
     void playDisc(final Location p0, final String p1, final SoundCategory p2, final float p3, final float p4);
     
     boolean discEject(final Jukebox p0);

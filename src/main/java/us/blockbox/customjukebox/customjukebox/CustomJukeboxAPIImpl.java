@@ -2,10 +2,7 @@ package us.blockbox.customjukebox.customjukebox;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Maps;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
 import org.bukkit.block.Jukebox;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,13 +18,15 @@ public class CustomJukeboxAPIImpl implements CustomJukeboxAPI
     private final BiMap<String, String> discNames;
     private final Map<Location, String> discLocations;
     private final Map<String, Long> songDurations;
+    private final Map<Location,ItemStack> discLoc2Stack;
     
-    CustomJukeboxAPIImpl(final CustomJukebox customJukebox, final String metaKey, final BiMap<String, String> discNames, final Map<Location, String> discLocations, final Map<String, Long> songDurations) {
+    CustomJukeboxAPIImpl(final CustomJukebox customJukebox, final String metaKey, final BiMap<String, String> discNames, final Map<Location, String> discLocations, final Map<String, Long> songDurations, final Map<Location, ItemStack> discLoc2Stack) {
         this.customJukebox = customJukebox;
         this.metaKey = metaKey;
         this.discNames = discNames;
         this.discLocations = discLocations;
         this.songDurations = songDurations;
+        this.discLoc2Stack = discLoc2Stack;
     }
     
     @Override
@@ -59,18 +58,22 @@ public class CustomJukeboxAPIImpl implements CustomJukeboxAPI
         if (customDiscInserted == null) {
             return false;
         }
-        final ItemStack recStack = this.discCreate(customDiscInserted);
+        //final ItemStack recStack = this.discCreate(customDiscInserted);
+        ItemStack recStack = discLoc2Stack.get(j.getLocation());
+        discLoc2Stack.remove(j.getLocation());
         final Location loc = j.getLocation();
         if (this.customJukebox.isDebug()) {
             this.customJukebox.getLogger().info("DEBUG: Ejecting disc " + customDiscInserted + " from jukebox at " + loc.toString());
         }
         j.removeMetadata(this.metaKey, this.customJukebox);
-        loc.getWorld().dropItem(loc.clone().add(0.5, 1.0, 0.5), recStack);
+        if(recStack.getType() != Material.AIR){
+            loc.getWorld().dropItem(loc.clone().add(0.5, 1.0, 0.5), recStack);
+        }
         this.discLocations.remove(loc);
         for (final Player p : loc.getWorld().getPlayers()) {
             if (loc.distanceSquared(p.getLocation()) <= 4225.0) {
                 p.stopSound(Sound.MUSIC_DISC_11);
-                p.stopSound(this.getDiscNames().get(customDiscInserted));
+                p.stopSound(this.getDiscNames().get(customDiscInserted),SoundCategory.RECORDS);
             }
         }
         return true;
@@ -84,7 +87,12 @@ public class CustomJukeboxAPIImpl implements CustomJukeboxAPI
         recStack.setItemMeta(recMeta);
         return recStack;
     }
-    
+
+    @Override
+    public void discInsert(Location p0, ItemStack p1) {
+        discLoc2Stack.put(p0, p1);
+    }
+
     @Override
     public long getDuration(final String song) {
         final Long duration = this.songDurations.get(song);
@@ -92,21 +100,6 @@ public class CustomJukeboxAPIImpl implements CustomJukeboxAPI
             return -1L;
         }
         return duration;
-    }
-    
-    @Override
-    public void playDisc(final Player p, final Location l, final String name, final float volume, final float pitch) {
-        p.playSound(l, name, volume, pitch);
-    }
-    
-    @Override
-    public void playDisc(final Player p, final Location l, final String name, final SoundCategory category, final float volume, final float pitch) {
-        p.playSound(l, name, category, volume, pitch);
-    }
-    
-    @Override
-    public void playDisc(final Location l, final String name, final float volume, final float pitch) {
-        l.getWorld().playSound(l, name, volume, pitch);
     }
     
     @Override

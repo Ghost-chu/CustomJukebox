@@ -64,6 +64,7 @@ class JukeboxListener implements Listener
             final Player p2 = e.getPlayer();
             p2.getWorld().playSound(clickedBlock.getLocation(),trackName, SoundCategory.RECORDS,3.0f, 1.0f);
             p2.sendMessage(ChatColor.GREEN + "Now playing: " + lore);
+            this.api.discInsert(j.getLocation(),hand);
             p2.getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), new ItemStack(Material.AIR));
             if (this.customJukebox.isDebug()) {
                 this.customJukebox.getLogger().info("[DEBUG] Player " + p2.getName() + " inserted " + trackName + " disc into jukebox at " + clickedBlock.getLocation().toString());
@@ -90,7 +91,8 @@ class JukeboxListener implements Listener
             if (currentLoopSong != null) {
                 final Player p = e.getPlayer();
                 p.stopSound(Sound.MUSIC_DISC_CAT);
-                p.playSound(p.getLocation(), currentLoopSong, 60.0f, 1.0f);
+                p.getWorld().playSound(p.getLocation(),currentLoopSong, SoundCategory.RECORDS,60.0f, 1.0f);
+                //p.playSound(p.getLocation(), currentLoopSong, 60.0f, 1.0f);
             }
         }
     }

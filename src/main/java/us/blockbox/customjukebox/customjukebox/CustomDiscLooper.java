@@ -39,7 +39,7 @@ class CustomDiscLooper extends BukkitRunnable
             for (final Player p : this.customJukebox.getServer().getOnlinePlayers()) {
                 p.stopSound(Sound.MUSIC_DISC_11);
                 p.stopSound(this.currentLoopSong);
-                p.playSound(p.getLocation(), (String)song.getKey(), 60.0f, 1.0f);
+                p.playSound(p.getLocation(), song.getKey(),SoundCategory.RECORDS, 60.0f, 1.0f);
             }
             try {
                 Thread.sleep(song.getValue() * 1000L + 1500L);

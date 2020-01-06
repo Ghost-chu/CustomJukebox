@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -23,6 +24,7 @@ public class CustomJukebox extends JavaPlugin implements Listener
     private final BiMap<String, String> discNames;
     private final Set<String> soundNames;
     private final Map<Location, String> discLocations;
+    private final Map<Location, ItemStack> disc2Stack;
     private File jukeboxLocFile;
     private FileConfiguration jukeboxLocConfig;
     private File jukeboxDiscsFile;
@@ -39,6 +41,7 @@ public class CustomJukebox extends JavaPlugin implements Listener
         this.discNames = HashBiMap.create();
         this.soundNames = new HashSet<>();
         this.discLocations = new HashMap<>();
+        this.disc2Stack = new HashMap<>();
         this.loopSongs = false;
         this.loopScheduler = false;
         this.debug = false;
@@ -90,7 +93,7 @@ public class CustomJukebox extends JavaPlugin implements Listener
             discLooper = new CustomDiscLooper(this, new ArrayList<>(songDurations.entrySet()));
             discLooper.runTaskLaterAsynchronously(this, 40L);
         }
-        this.api = new CustomJukeboxAPIImpl(this, "CJB_DISC", this.discNames, this.discLocations, songDurations);
+        this.api = new CustomJukeboxAPIImpl(this, "CJB_DISC", this.discNames, this.discLocations, songDurations, this.disc2Stack);
         server.getPluginManager().registerEvents(new JukeboxListener(this, this.api, discLooper), this);
         this.getCommand("disc").setTabCompleter(new DiscTabCompleter(this));
         this.enabledCleanly = true;
