@@ -1,10 +1,7 @@
 package us.blockbox.customjukebox.customjukebox;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Jukebox;
@@ -65,7 +62,7 @@ class JukeboxListener implements Listener
                 }
             }
             final Player p2 = e.getPlayer();
-            p2.getWorld().playSound(clickedBlock.getLocation(), trackName, 3.0f, 1.0f);
+            p2.getWorld().playSound(clickedBlock.getLocation(),trackName, SoundCategory.RECORDS,3.0f, 1.0f);
             p2.sendMessage(ChatColor.GREEN + "Now playing: " + lore);
             p2.getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), new ItemStack(Material.AIR));
             if (this.customJukebox.isDebug()) {
