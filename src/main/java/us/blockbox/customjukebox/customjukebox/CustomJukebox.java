@@ -114,11 +114,6 @@ public class CustomJukebox extends JavaPlugin implements Listener
         }
         final int majorMin = 1;
         final int minorMin = 10;
-        if (major == null || minor == null || (major <= 1 && (major != 1 || minor < 10))) {
-            server.getConsoleSender().sendMessage(ChatColor.RED + "You must be running " + 1 + "." + 10 + "or higher to use CustomJukebox.");
-            server.getPluginManager().disablePlugin(this);
-            return true;
-        }
         return false;
     }
     
